@@ -25,7 +25,7 @@ jobs:
           extensions: mbstring, dom, fileinfo, pdo_sqlite
 
       - name: Cache Composer packages
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/composer/files
           key: composer-${{ runner.os }}-${{ hashFiles('composer.lock') }}
