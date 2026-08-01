@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Helphub Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --bg:linear-gradient(135deg,#f6f2ff,#fdeef4,#eef7ff);
+  --card:rgba(255,255,255,.8);
+  --primary:#7c6fdc;
+  --secondary:#ffbcd9;
+  --text:#3a355e;
+  --muted:#8f88c9;
+  --border:#dcd4ff;
+  --shadow:0 25px 45px rgba(170,150,255,.25);
+}
+
+body.dark{
+  --bg:linear-gradient(135deg,#ded7ff,#f1d4e3,#dbe9ff);
+}
+
+*{
+  margin:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
+}
+
+body{
+  background:var(--bg);
+  height:100vh;
+}
+
+/* ===== LAYOUT ===== */
+.wrapper{
+  display:flex;
+  height:100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:260px;
+  background:var(--card);
+  backdrop-filter:blur(18px);
+  border-right:1px solid var(--border);
+  padding:26px;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:600;
+  color:#5f54b6;
+  margin-bottom:32px;
+}
+
+.menu a{
+  display:flex;
+  gap:12px;
+  padding:14px 18px;
+  margin-bottom:14px;
+  border-radius:16px;
+  cursor:pointer;
+  color:var(--text);
+  transition:.3s;
+}
+.menu a.active,
+.menu a:hover{
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  box-shadow:var(--shadow);
+}
+
+/* ===== MAIN ===== */
+.main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+/* ===== TOPBAR ===== */
+.topbar{
+  height:72px;
+  background:linear-gradient(135deg,var(--primary),#9f93ff);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 30px;
+  color:#fff;
+}
+
+.top-right{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+.icon{
+  font-size:20px;
+  cursor:pointer;
+}
+
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid #fff;
+  cursor:pointer;
+}
+
+/* ===== PROFILE ===== */
+.profile{
+  position:absolute;
+  top:82px;
+  right:30px;
+  background:var(--card);
+  border-radius:20px;
+  padding:22px;
+  width:220px;
+  box-shadow:var(--shadow);
+  display:none;
+}
+
+/* ===== CONTENT ===== */
+.content{
+  padding:30px;
+  overflow:auto;
+}
+
+/* ===== GRID ===== */
+.grid4{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:22px;
+}
+.grid2{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:22px;
+  margin-top:26px;
+}
+.grid2eq{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+  margin-top:26px;
+}
+
+/* ===== CARD ===== */
+.card{
+  background:var(--card);
+  border-radius:22px;
+  padding:26px;
+  box-shadow:var(--shadow);
+  transition:.3s;
+}
+.card:hover{transform:translateY(-4px)}
+
+.stat h2{color:var(--primary)}
+.stat p{color:var(--muted)}
+
+/* ===== TABLE ===== */
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;text-align:left}
+th{color:var(--muted)}
+tr:not(:last-child){border-bottom:1px solid #eee}
+
+/* ===== CHART ===== */
+.chart{height:200px;display:flex;align-items:flex-end;gap:14px}
+.bar{
+  flex:1;
+  background:linear-gradient(180deg,var(--primary),var(--secondary));
+  border-radius:12px 12px 0 0;
+  animation:grow 1s ease;
+}
+@keyframes grow{from{height:0}}
+
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  margin-bottom:12px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  cursor:pointer;
+}
+.alert{
+  padding:14px;
+  border-radius:14px;
+  background:#fff;
+  margin-bottom:12px;
+}
+
+
+.logout-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(140,120,255,.18);
+  backdrop-filter:blur(10px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.logout-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:26px;
+  width:320px;
+  border-radius:22px;
+  box-shadow:var(--shadow);
+  text-align:center;
+  animation:scaleIn .25s ease;
+}
+
+.logout-box h3{
+  color:var(--primary);
+  margin-bottom:8px;
+  font-weight:600;
+}
+
+.logout-box p{
+  color:var(--text);
+  opacity:.85;
+  margin-bottom:22px;
+}
+
+.logout-actions{
+  display:flex;
+  gap:14px;
+}
+
+.logout-actions button{
+  flex:1;
+  padding:12px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+  font-weight:500;
+  transition:.3s;
+}
+
+.btn-cancel{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--text);
+}
+
+.btn-cancel:hover{
+  background:rgba(124,111,220,.08);
+}
+
+.btn-logout{
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:#fff;
+}
+
+.btn-logout:hover{
+  box-shadow:var(--shadow);
+}
+
+@keyframes scaleIn{
+  from{transform:scale(.9);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+
+
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">Helphub</div>
+  <div class="menu">
+    <a class="active">📊 Dashboard</a>
+    <a>👥 Manage Users</a>
+    <a>🧑‍🔧 Providers</a>
+    <a>🛠️ Services</a>
+    <a>📦 Bookings</a>
+    <a>⭐ Reviews</a>
+    <a>📈 Reports</a>
+    
+	<a class="logout" onclick="logoutAdmin()">🚪 Logout</a>
+
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <h3>Admin Dashboard</h3>
+    <div class="top-right">
+      🔔
+      <span class="icon" onclick="toggleTheme()">🌙</span>
+      <img id="avatar" class="avatar">
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="profile" id="profile">
+    <b>Admin</b><br>
+    <small>Administrator</small>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <div class="grid4">
+      <div class="card stat"><h2 id="u">0</h2><p>Total Users</p></div>
+      <div class="card stat"><h2 id="p">0</h2><p>Providers</p></div>
+      <div class="card stat"><h2 id="b">0</h2><p>Bookings</p></div>
+      <div class="card stat"><h2 id="a">0</h2><p>Pending Approvals</p></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Recent Bookings</h3><br>
+        <table>
+          <tr><th>User</th><th>Service</th><th>Status</th></tr>
+          <tr><td>Riya</td><td>Plumber</td><td>Done</td></tr>
+          <tr><td>Aman</td><td>Electrician</td><td>Pending</td></tr>
+          <tr><td>Neha</td><td>AC Repair</td><td>Done</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Monthly Bookings</h3><br>
+        <div class="chart">
+          <div class="bar" style="height:40%"></div>
+          <div class="bar" style="height:70%"></div>
+          <div class="bar" style="height:55%"></div>
+          <div class="bar" style="height:85%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2eq">
+      <div class="card">
+        <h3>Quick Actions</h3><br>
+        <button>➕ Add Service</button>
+        <button>✅ Approve Provider</button>
+        <button>👥 Manage Users</button>
+        <button>📊 View Reports</button>
+      </div>
+
+      <div class="card">
+        <h3>Alerts</h3><br>
+        <div class="alert">⚠️ 3 Providers Pending</div>
+        <div class="alert">⭐ 5 New Reviews</div>
+        <div class="alert">❗ 1 Service Disabled</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+<div class="logout-modal" id="logoutModal">
+  <div class="logout-box">
+    <h3>🚪 Logout</h3>
+    <p>Are you sure you want to logout?</p>
+    <div class="logout-actions">
+      <button class="btn-cancel" onclick="closeLogout()">Cancel</button>
+      <button class="btn-logout" onclick="confirmLogout()">Logout</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){
+  document.body.classList.toggle("dark");
+}
+
+const img = localStorage.getItem("adminImage") || "https://i.imgur.com/6VBx3io.png";
+document.getElementById("avatar").src = img;
+
+document.getElementById("avatar").onclick = ()=>{
+  const p=document.getElementById("profile");
+  p.style.display = p.style.display==="block"?"none":"block";
+};
+
+function counter(id,end){
+  let i=0,el=document.getElementById(id);
+  let t=setInterval(()=>{
+    el.innerText=++i;
+    if(i>=end) clearInterval(t);
+  },20);
+}
+counter("u",120);
+counter("p",48);
+counter("b",310);
+counter("a",7);
+
+
+
+function logoutAdmin(){
+  document.getElementById("logoutModal").style.display="flex";
+}
+
+function closeLogout(){
+  document.getElementById("logoutModal").style.display="none";
+}
+
+function confirmLogout(){
+  localStorage.removeItem("adminImage");
+  window.location.href="admin-login.html";
+}
+
+
+
+
+</script>
+
+</body>
+</html>
